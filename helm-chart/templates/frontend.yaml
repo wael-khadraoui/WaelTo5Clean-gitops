@@ -1,11 +1,9 @@
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
-  namespace: waelto5clean
 spec:
-  replicas: 2
+  replicas: {{ .Values.frontend.replicas }}
   selector:
     matchLabels:
       app: frontend
@@ -16,19 +14,18 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: wael558/waelto5clean-frontend:latest
+        image: "{{ .Values.frontend.image }}:{{ .Values.frontend.tag }}"
         ports:
-        - containerPort: 80
+        - containerPort: {{ .Values.frontend.port }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: frontend-svc
-  namespace: waelto5clean
 spec:
   selector:
     app: frontend
   ports:
-  - port: 80
-    targetPort: 80
+  - port: {{ .Values.frontend.port }}
+    targetPort: {{ .Values.frontend.port }}
   type: NodePort

@@ -1,0 +1,31 @@
+{{- if .Values.backend.canary.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-canary
+  labels:
+    app: backend
+    track: canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+      track: canary
+  template:
+    metadata:
+      labels:
+        app: backend
+        track: canary
+    spec:
+      containers:
+      - name: backend
+        image: "{{ .Values.backend.image }}:{{ .Values.backend.tag }}"
+        ports:
+        - containerPort: {{ .Values.backend.port }}
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: CANARY
+          value: "true"
+{{- end }}

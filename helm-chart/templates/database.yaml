@@ -1,9 +1,7 @@
-
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: postgres
-  namespace: waelto5clean
 spec:
   serviceName: postgres
   replicas: 1
@@ -17,16 +15,16 @@ spec:
     spec:
       containers:
       - name: postgres
-        image: postgres:16-alpine
+        image: {{ .Values.database.image }}
         ports:
         - containerPort: 5432
         env:
         - name: POSTGRES_DB
-          value: "waelto5clean"
+          value: {{ .Values.database.name }}
         - name: POSTGRES_USER
-          value: "admin"
+          value: {{ .Values.database.user }}
         - name: POSTGRES_PASSWORD
-          value: "admin123"
+          value: {{ .Values.database.password }}
         volumeMounts:
         - name: postgres-data
           mountPath: /var/lib/postgresql/data
@@ -37,13 +35,12 @@ spec:
       accessModes: ["ReadWriteOnce"]
       resources:
         requests:
-          storage: 1Gi
+          storage: {{ .Values.database.storage }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: postgres-svc
-  namespace: waelto5clean
 spec:
   selector:
     app: postgres

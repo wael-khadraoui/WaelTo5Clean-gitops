@@ -1,0 +1,21 @@
+backend:
+  image: wael558/waelto5clean-backend
+  tag: latest
+  replicas: 2
+  port: 8080
+  canary:
+    enabled: true
+    weight: 20
+
+frontend:
+  image: wael558/waelto5clean-frontend
+  tag: latest
+  replicas: 2
+  port: 80
+
+database:
+  image: postgres:16-alpine
+  storage: 1Gi
+  name: waelto5clean
+  user: admin
+  password: admin123
